@@ -2,32 +2,40 @@
 // (https://github.com/antirez/smaz) for compressing small strings.
 package smaz
 
-import "errors"
+import (
+	"errors"
+)
 
 var (
-	codeStrings = []string{" ",
-		"the", "e", "t", "a", "of", "o", "and", "i", "n", "s", "e ", "r", " th",
-		" t", "in", "he", "th", "h", "he ", "to", "\r\n", "l", "s ", "d", " a", "an",
-		"er", "c", " o", "d ", "on", " of", "re", "of ", "t ", ", ", "is", "u", "at",
-		"   ", "n ", "or", "which", "f", "m", "as", "it", "that", "\n", "was", "en",
-		"  ", " w", "es", " an", " i", "\r", "f ", "g", "p", "nd", " s", "nd ", "ed ",
-		"w", "ed", "http://", "for", "te", "ing", "y ", "The", " c", "ti", "r ", "his",
-		"st", " in", "ar", "nt", ",", " to", "y", "ng", " h", "with", "le", "al", "to ",
-		"b", "ou", "be", "were", " b", "se", "o ", "ent", "ha", "ng ", "their", "\"",
-		"hi", "from", " f", "in ", "de", "ion", "me", "v", ".", "ve", "all", "re ",
-		"ri", "ro", "is ", "co", "f t", "are", "ea", ". ", "her", " m", "er ", " p",
-		"es ", "by", "they", "di", "ra", "ic", "not", "s, ", "d t", "at ", "ce", "la",
-		"h ", "ne", "as ", "tio", "on ", "n t", "io", "we", " a ", "om", ", a", "s o",
-		"ur", "li", "ll", "ch", "had", "this", "e t", "g ", "e\r\n", " wh", "ere",
-		" co", "e o", "a ", "us", " d", "ss", "\n\r\n", "\r\n\r", "=\"", " be", " e",
-		"s a", "ma", "one", "t t", "or ", "but", "el", "so", "l ", "e s", "s,", "no",
-		"ter", " wa", "iv", "ho", "e a", " r", "hat", "s t", "ns", "ch ", "wh", "tr",
-		"ut", "/", "have", "ly ", "ta", " ha", " on", "tha", "-", " l", "ati", "en ",
-		"pe", " re", "there", "ass", "si", " fo", "wa", "ec", "our", "who", "its", "z",
-		"fo", "rs", ">", "ot", "un", "<", "im", "th ", "nc", "ate", "><", "ver", "ad",
-		" we", "ly", "ee", " n", "id", " cl", "ac", "il", "</", "rt", " wi", "div",
-		"e, ", " it", "whi", " ma", "ge", "x", "e c", "men", ".com",
-	}
+	codeStrings = []string{
+		"linksynergy","mediaforge","com","https:","jp-tags","tags","253D","http:","26redirecturl","3Fmerchant",
+		"26strategy","duration","26height","prodID","js","26width","3Dhttp","rd","3Dretargeting","?prodID",
+		"imp?eID","26nID","catID","2526mt_adid","2526mt_inapp","reqid","2F","253Fmt_aid","253D0","xdom",
+		"2526mt_exid","2526mt_uuid","2F11","2526redirect","type","26cb","252Finsight","2526mt_id","253A",
+		"2526mt_sid","252520States","253Dhttps","2Famp","2526rlangs","2F2017+07","25253A","26referrer",
+		"2526crrelr","2Fjp-amp","26exchange","2F2017+20","253DOther","253DUnited","2526svscid","252Ftrack",
+		"2526rcats","2526svpid","2526mlang","253DChrome","2Fclick","252F","2Fpixel","mathtag","3D300","http",
+		"mID","cts","url","nID","sID","2526td_s","2526mfsi","2526rgco","2526mfld","2526agsa","2526mste",
+		"2526crid","2526uhow","2526rgme","2526mssi","2526mcat","2526rgci","2526rgre","2526daid","2526tmpc",
+		"2526vrtd","2526rcxt","2526svsc","aID","2526sig","3D250","?catID","2526mt_lp","2526testid","2526mt_3pck",
+		"252Fclk","2526rgz","2526osf","2526dnr","2526osi","2526did","2526osv","2526dur","2526sfe","2526vpb",
+		"253Fimp","2526npt","253Dhttp","2526mdl","doubleclick","253Dwith-iplookup","2526ag","adsrvr","3A",
+		"2Fimg","2526sv","2526dt","2526br","2526fq","2526os","2526cf","26nuid","2Fwww","https","253DWindows",
+		"253Dno-iplookup","26site","3Dprospecting","252C0","3972","3D728","2F2017+12","252520Windows",
+		"253DMobileOptimizedWeb","252Frd","252Ftg","252Fv1","prod","3D20","2526r","3Dhttps","253D127","08",
+		"on_demandware","253Dwww","253Den","253DMobile","3A28","2Fadclick","3Dashley_furniture_retargeting",
+		"252526utm_medium","socdm","3A29","252Fs","3D90","2526mk","252526utm_campaign","3D80",
+		"3DINSERT_RANDOM_NUMBER_HERE","252526rdadid","pt","26ip","253DPC","253DWindows10","253DAndroid",
+		"category","253D4","252526rdmid","2520","252526client","2F2017+06","25253Futm_source","act?eID",
+		"cat","25253D","3A30","252520-","3D49","5744","2FAdDisplayTrackerServlet","253D1","25252F",
+		"253Dgoogle","3A27","postcode","25253Ddisplay","252526num","252526sig","253Dcasale","2936",
+		"product","org","252526adurl","3282","253DWindows7","253D2","252526rd_eid","3Dpacsun_prospecting",
+		"?pt","3Dretargeting-scaleout","4600?reqid","26","2526adpt","253DSafari","5846","25253Fsa",
+		"252526ai","2Faclk","3D600","25253D1","253DAndroid70","4601?rmpb","4950","4008","np_banner_model_id",
+		"imp?nt","253DInternetExplorer11","252C1","26click_encoding","suburb","253D01","home",
+		"np_banner_set_id","net","3538?rmpb","2728","252Fadclick","rubiconproject","253Dopenx",
+		"3320?rmpb","253D15","5899?rmpb","20","252526utm_content","cart","3D160","25253FclickData",
+		"3537?rmpb","253Fsa","253D3"}
 
 	codes    = make([][]byte, len(codeStrings))
 	codeTrie trieNode
