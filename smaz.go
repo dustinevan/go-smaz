@@ -4,6 +4,7 @@ package smaz
 
 import (
 	"errors"
+	"fmt"
 )
 
 var (
@@ -105,10 +106,14 @@ func (n *trieNode) put(k []byte, v byte) bool {
 	return true
 }
 
-func flushVerb(out, verb []byte) []byte {
+func flushVerb(out, verb []byte) ([]byte, error) {
 	// We can write a max of 255 continuous verbatim characters,
 	// because the length of the continuous verbatim section is represented
 	// by a single byte.
+	if len(verb) > 255 {
+		return nil, fmt.Errorf("verbatim string too long: %s", verb)
+	}
+
 	var chunk []byte
 	for len(verb) > 0 {
 		if len(verb) < 255 {
@@ -126,11 +131,11 @@ func flushVerb(out, verb []byte) []byte {
 		}
 		out = append(out, chunk...)
 	}
-	return out
+	return out, nil
 }
 
 // Compress compresses a byte slice and returns the compressed data.
-func Compress(input []byte) []byte {
+func Compress(input []byte) ([]byte, error) {
 	out := make([]byte, 0, len(input)/2) // estimate output size
 	var verb []byte
 
@@ -152,7 +157,11 @@ func Compress(input []byte) []byte {
 
 		if prefixLen > 0 {
 			input = input[prefixLen:]
-			out = flushVerb(out, verb)
+			out, err := flushVerb(out, verb)
+			if err != nil {
+				return nil, err
+			}
+
 			verb = verb[:0]
 			out = append(out, code)
 		} else {
