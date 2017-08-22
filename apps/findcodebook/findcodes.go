@@ -10,7 +10,7 @@ import (
 	"sort"
 )
 
-var splitchar = map[rune]bool{'/':true, '&':true, '%':true, '.':true, '=':true }
+var splitchar = map[rune]bool{'/':true, '&':true, '%':true, '=':true }
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
