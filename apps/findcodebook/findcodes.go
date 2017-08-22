@@ -10,14 +10,12 @@ import (
 	"sort"
 )
 
-var splitchar = map[rune]bool{'/':true, '&':true, '%':true, '=':true }
-
 func main() {
 	reader := bufio.NewReader(os.Stdin)
-	codes := make([]*code, 0)
+	codes := make(map[string]int)
 	for {
 		bytes, err := reader.ReadBytes('\n')
-		url := strings.Trim(string(bytes), "\n\"")
+		s := strings.Trim(string(bytes), "\n\"")
 		if err != nil && err != io.EOF {
 			log.Fatal(err)
 		}
@@ -25,25 +23,15 @@ func main() {
 			PrintResults(codes)
 			os.Exit(0)
 		}
-		strs := strings.FieldsFunc(url,
-			func(c rune) bool {
-				_, ok := splitchar[c]
-				return ok
-			})
-		for _, s := range strs {
-			if len(s) > 40 {
+
+		for i := 0; i < len(s)-5; i++ {
+			this := s[i:(i+5)]
+			_, ok := codes[this]
+			if ok {
+				codes[this]++
 				continue
 			}
-			exists := false
-			for _, c := range codes {
-				if c.name == s {
-					exists = true
-					c.occurrences++
-				}
-			}
-			if !exists {
-				codes = append(codes, &code{s, 1})
-			}
+			codes[this] = 1
 		}
 	}
 }
@@ -52,15 +40,17 @@ type code struct {
 	occurrences int
 }
 
-func (c *code) score() int {
-	return (len(c.name)-1)*c.occurrences
-}
 
-func PrintResults(codes []*code) {
-	sort.Slice(codes, func(i, j int) bool {
-		return codes[i].score() >= codes[j].score()
+func PrintResults(codes map[string]int) {
+	results := make([]code, 0)
+
+	for k, v := range codes {
+		results = append(results, code{k, v})
+	}
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].occurrences >= results[j].occurrences
 	})
-	for _, c := range codes {
-		fmt.Printf("string: %s, occurrences: %v, score: %v\n", c.name, c.occurrences, c.score())
+	for _, c := range results {
+		fmt.Printf("string: %s, occurrences: %v\n", c.name, c.occurrences)
 	}
 }
